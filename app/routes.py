@@ -4,6 +4,9 @@ from . import db
 from .models import User, Product, Order, OrderProduct
 from .forms import RegistrationForm, LoginForm
 from flask import Blueprint
+import stripe
+from flask import current_app
+
 
 # Define Blueprint
 main_bp = Blueprint('main', __name__)
