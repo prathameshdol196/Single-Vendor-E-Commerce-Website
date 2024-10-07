@@ -83,12 +83,13 @@ def cart():
     for product_id, quantity in cart.items():
         product = Product.query.get(int(product_id))
         if product:
+            subtotal = product.price * quantity
             products.append({
                 'product': product,
                 'quantity': quantity,
-                'subtotal': product.price * quantity
+                'subtotal': subtotal
             })
-            total += product.price * quantity
+            total += subtotal
     return render_template('cart.html', products=products, total=total)
 
 
@@ -110,11 +111,12 @@ def checkout():
         flash('Your cart is empty.', 'warning')
         return redirect(url_for('main.home'))
     if request.method == 'POST':
-        # Process order
+        # Process the order
         total = 0
         order = Order(user_id=current_user.id, total=0)
         db.session.add(order)
-        db.session.commit()
+        db.session.commit()  # Commit to generate order ID
+
         for product_id, quantity in cart.items():
             product = Product.query.get(int(product_id))
             if product and product.stock >= quantity:
@@ -123,11 +125,12 @@ def checkout():
                 product.stock -= quantity
                 total += product.price * quantity
             else:
-                flash('One or more products are out of stock.', 'danger')
+                flash(f'Product {product.name} is out of stock or does not have enough quantity.', 'danger')
                 return redirect(url_for('main.cart'))
+
         order.total = total
         db.session.commit()
         session['cart'] = {}
-        flash('Order placed successfully!', 'success')
+        flash('Your order has been placed successfully!', 'success')
         return redirect(url_for('main.home'))
     return render_template('checkout.html')
