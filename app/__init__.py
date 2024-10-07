@@ -16,8 +16,7 @@ bootstrap = Bootstrap()
 def create_app():
 
     load_dotenv()  # Load environment variables from .env
-    port = os.environ.get("PORT")
-    app = Flask(__name__, port)
+    app = Flask(__name__)
     app.config.from_object('config.Config')
 
     db.init_app(app)
