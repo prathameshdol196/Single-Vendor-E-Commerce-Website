@@ -1,7 +1,7 @@
 from flask import Flask
 from flask.cli import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from flask_migrate import Migrate, upgrade
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
 import os
@@ -37,6 +37,13 @@ def create_app():
         app.register_blueprint(admin_bp)
 
         db.create_all()
+
+        # Apply migrations
+        try:
+            upgrade()
+            app.logger.info('Database migrations applied successfully.')
+        except Exception as e:
+            app.logger.error(f'Error applying migrations: {e}')
 
         # Create admin user if environment variables are set and no admin exists
         admin_email = os.environ.get("ADMIN_EMAIL")

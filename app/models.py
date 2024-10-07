@@ -14,6 +14,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+    orders = db.relationship('Order', backref='user', lazy=True)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -37,7 +38,6 @@ class Order(db.Model):
     products = db.relationship("OrderProduct", backref="order", lazy=True)
     total = db.Column(db.Float, nullable=False)
     date_ordered = db.Column(db.DateTime, nullable=False, default=db.func.now())
-    status = db.Column(db.String(20), nullable=False, default="Pending")  # New field
 
 
 class OrderProduct(db.Model):
