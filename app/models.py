@@ -30,6 +30,7 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     image_file = db.Column(db.String(100), nullable=False, default="default.jpg")
     stock = db.Column(db.Integer, nullable=False, default=0)
+    order_products = db.relationship('OrderProduct', backref='product', lazy=True)
 
 
 class Order(db.Model):
