@@ -1,4 +1,5 @@
 from flask import Flask
+from flask.cli import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
@@ -13,6 +14,9 @@ login_manager.login_message_category = 'info'
 bootstrap = Bootstrap()
 
 def create_app():
+
+    load_dotenv()  # Load environment variables from .env
+
     app = Flask(__name__)
     app.config.from_object('config.Config')
 
