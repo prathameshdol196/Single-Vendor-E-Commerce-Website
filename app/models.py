@@ -27,21 +27,21 @@ class Product(db.Model):
     name = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable=False)
-    image_file = db.Column(db.String(100), nullable=False, default='default.jpg')
+    image_file = db.Column(db.String(100), nullable=False, default="default.jpg")
     stock = db.Column(db.Integer, nullable=False, default=0)
 
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    products = db.relationship('OrderProduct', backref='order', lazy=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    products = db.relationship("OrderProduct", backref="order", lazy=True)
     total = db.Column(db.Float, nullable=False)
     date_ordered = db.Column(db.DateTime, nullable=False, default=db.func.now())
-    status = db.Column(db.String(20), nullable=False, default='Pending')  # New field
+    status = db.Column(db.String(20), nullable=False, default="Pending")  # New field
 
 
 class OrderProduct(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    order_id = db.Column(db.Integer, db.ForeignKey("order.id"), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)
     quantity = db.Column(db.Integer, nullable=False, default=1)

@@ -9,75 +9,75 @@ from flask import current_app
 
 
 # Define Blueprint
-main_bp = Blueprint('main', __name__)
+main_bp = Blueprint("main", __name__)
 
 
-@main_bp.route('/')
+@main_bp.route("/")
 def home():
     products = Product.query.all()
-    return render_template('index.html', products=products)
+    return render_template("index.html", products=products)
 
 
-@main_bp.route('/register', methods=['GET', 'POST'])
+@main_bp.route("/register", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('main.home'))
+        return redirect(url_for("main.home"))
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Your account has been created! You can now log in.', 'success')
-        return redirect(url_for('main.login'))
-    return render_template('register.html', form=form)
+        flash("Your account has been created! You can now log in.", "success")
+        return redirect(url_for("main.login"))
+    return render_template("register.html", form=form)
 
 
-@main_bp.route('/login', methods=['GET', 'POST'])
+@main_bp.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('main.home'))
+        return redirect(url_for("main.home"))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember.data)
-            next_page = request.args.get('next')
-            flash('Logged in successfully!', 'success')
-            return redirect(next_page) if next_page else redirect(url_for('main.home'))
+            next_page = request.args.get("next")
+            flash("Logged in successfully!", "success")
+            return redirect(next_page) if next_page else redirect(url_for("main.home"))
         else:
-            flash('Login Unsuccessful. Please check email and password.', 'danger')
-    return render_template('login.html', form=form)
+            flash("Login Unsuccessful. Please check email and password.", "danger")
+    return render_template("login.html", form=form)
 
 
-@main_bp.route('/logout')
+@main_bp.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for('main.home'))
+    return redirect(url_for("main.home"))
 
 
-@main_bp.route('/product/<int:product_id>')
+@main_bp.route("/product/<int:product_id>")
 def product_detail(product_id):
     product = Product.query.get_or_404(product_id)
-    return render_template('product.html', product=product)
+    return render_template("product.html", product=product)
 
 
-@main_bp.route('/add_to_cart/<int:product_id>', methods=['POST'])
+@main_bp.route("/add_to_cart/<int:product_id>", methods=["POST"])
 def add_to_cart(product_id):
     product = Product.query.get_or_404(product_id)
-    cart = session.get('cart', {})
+    cart = session.get("cart", {})
     if str(product_id) in cart:
         cart[str(product_id)] += 1
     else:
         cart[str(product_id)] = 1
-    session['cart'] = cart
-    flash(f'Added {product.name} to cart.', 'success')
-    return redirect(url_for('main.home'))
+    session["cart"] = cart
+    flash(f"Added {product.name} to cart.", "success")
+    return redirect(url_for("main.home"))
 
 
-@main_bp.route('/cart')
+@main_bp.route("/cart")
 def cart():
-    cart = session.get('cart', {})
+    cart = session.get("cart", {})
     products = []
     total = 0
     for product_id, quantity in cart.items():
@@ -85,32 +85,32 @@ def cart():
         if product:
             subtotal = product.price * quantity
             products.append({
-                'product': product,
-                'quantity': quantity,
-                'subtotal': subtotal
+                "product": product,
+                "quantity": quantity,
+                "subtotal": subtotal
             })
             total += subtotal
-    return render_template('cart.html', products=products, total=total)
+    return render_template("cart.html", products=products, total=total)
 
 
-@main_bp.route('/remove_from_cart/<int:product_id>', methods=['POST'])
+@main_bp.route("/remove_from_cart/<int:product_id>", methods=["POST"])
 def remove_from_cart(product_id):
-    cart = session.get('cart', {})
+    cart = session.get("cart", {})
     if str(product_id) in cart:
         del cart[str(product_id)]
-        session['cart'] = cart
-        flash('Item removed from cart.', 'success')
-    return redirect(url_for('main.cart'))
+        session["cart"] = cart
+        flash("Item removed from cart.", "success")
+    return redirect(url_for("main.cart"))
 
 
-@main_bp.route('/checkout', methods=['GET', 'POST'])
+@main_bp.route("/checkout", methods=["GET", "POST"])
 @login_required
 def checkout():
-    cart = session.get('cart', {})
+    cart = session.get("cart", {})
     if not cart:
-        flash('Your cart is empty.', 'warning')
-        return redirect(url_for('main.home'))
-    if request.method == 'POST':
+        flash("Your cart is empty.", "warning")
+        return redirect(url_for("main.home"))
+    if request.method == "POST":
         # Process the order
         total = 0
         order = Order(user_id=current_user.id, total=0)
@@ -125,12 +125,12 @@ def checkout():
                 product.stock -= quantity
                 total += product.price * quantity
             else:
-                flash(f'Product {product.name} is out of stock or does not have enough quantity.', 'danger')
-                return redirect(url_for('main.cart'))
+                flash(f"Product {product.name} is out of stock or does not have enough quantity.", "danger")
+                return redirect(url_for("main.cart"))
 
         order.total = total
         db.session.commit()
-        session['cart'] = {}
-        flash('Your order has been placed successfully!', 'success')
-        return redirect(url_for('main.home'))
-    return render_template('checkout.html')
+        session["cart"] = {}
+        flash("Your order has been placed successfully!", "success")
+        return redirect(url_for("main.home"))
+    return render_template("checkout.html")
