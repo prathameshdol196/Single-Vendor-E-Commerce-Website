@@ -2,35 +2,66 @@
 {% block title %}Admin Dashboard - E-commerce Platform{% endblock %}
 {% block content %}
 <h2 class="mt-4">Admin Dashboard</h2>
+
+<!-- Products Section -->
+<h3>Manage Products</h3>
 <a href="{{ url_for('admin.add_product') }}" class="btn btn-success mb-3">Add New Product</a>
 <table class="table table-bordered">
     <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Stock</th>
-        <th>Actions</th>
-    </tr>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Actions</th>
+        </tr>
     </thead>
     <tbody>
-    {% for product in products %}
-    <tr>
-        <td>{{ product.id }}</td>
-        <td>{{ product.name }}</td>
-        <td> ₹{{ product.price }}</td>
-        <td>{{ product.stock }}</td>
-        <td>
-            <a href="{{ url_for('admin.edit_product', product_id=product.id) }}" class="btn btn-warning btn-sm">Edit</a>
-            <form action="{{ url_for('admin.delete_product', product_id=product.id) }}" method="POST"
-                  style="display:inline;">
-                <button type="submit" class="btn btn-danger btn-sm"
-                        onclick="return confirm('Are you sure you want to delete this product?');">Delete
-                </button>
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
+        {% for product in products %}
+        <tr>
+            <td>{{ product.id }}</td>
+            <td>{{ product.name }}</td>
+            <td>${{ '%.2f'|format(product.price) }}</td>
+            <td>{{ product.stock }}</td>
+            <td>
+                <a href="{{ url_for('admin.edit_product', product_id=product.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                <form action="{{ url_for('admin.delete_product', product_id=product.id) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Orders Section -->
+<h3 class="mt-5">Manage Orders</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>User</th>
+            <th>Total ($)</th>
+            <th>Date Ordered</th>
+            <th>Products</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.user.username }} ({{ order.user.email }})</td>
+            <td>{{ '%.2f'|format(order.total) }}</td>
+            <td>{{ order.date_ordered.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td>
+                <ul>
+                    {% for item in order.products %}
+                    <li>{{ item.product.name }} - Quantity: {{ item.quantity }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
     </tbody>
 </table>
 {% endblock %}

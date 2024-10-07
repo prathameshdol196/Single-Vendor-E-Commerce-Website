@@ -1,13 +1,14 @@
 from flask import render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_required, current_user
 from . import db
-from .models import Product
+from .models import Product, Order, OrderProduct
 from .forms import ProductForm
 from flask import Blueprint
 import os
 from werkzeug.utils import secure_filename
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
+
 
 @admin_bp.route('/dashboard')
 @login_required
@@ -16,7 +17,9 @@ def dashboard():
         flash('Access denied.', 'danger')
         return redirect(url_for('main.home'))
     products = Product.query.all()
-    return render_template('admin/dashboard.html', products=products)
+    orders = Order.query.order_by(Order.date_ordered.desc()).all()
+    return render_template('admin/dashboard.html', products=products, orders=orders)
+
 
 @admin_bp.route('/add_product', methods=['GET', 'POST'])
 @login_required
@@ -44,6 +47,7 @@ def add_product():
         return redirect(url_for('admin.dashboard'))
     return render_template('admin/add_product.html', form=form)
 
+
 @admin_bp.route('/edit_product/<int:product_id>', methods=['GET', 'POST'])
 @login_required
 def edit_product(product_id):
@@ -66,6 +70,7 @@ def edit_product(product_id):
         flash('Product updated successfully!', 'success')
         return redirect(url_for('admin.dashboard'))
     return render_template('admin/edit_product.html', form=form, product=product)
+
 
 @admin_bp.route('/delete_product/<int:product_id>', methods=['POST'])
 @login_required
