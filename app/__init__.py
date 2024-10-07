@@ -4,7 +4,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
-from models import User
 import os
 
 db = SQLAlchemy()
@@ -27,6 +26,7 @@ def create_app():
 
     with app.app_context():
         from . import models
+        from .models import User
 
         # Import Blueprints
         from .routes import main_bp
