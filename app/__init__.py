@@ -38,13 +38,6 @@ def create_app():
 
         db.create_all()
 
-        # Apply migrations
-        try:
-            upgrade()
-            app.logger.info('Database migrations applied successfully.')
-        except Exception as e:
-            app.logger.error(f'Error applying migrations: {e}')
-
         # Create admin user if environment variables are set and no admin exists
         admin_email = os.environ.get("ADMIN_EMAIL")
         admin_username = os.environ.get("ADMIN_USERNAME")
