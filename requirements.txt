@@ -18,3 +18,4 @@ future
 alembic
 SQLAlchemy
 gunicorn
+psycopg2
