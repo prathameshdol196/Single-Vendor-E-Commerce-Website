@@ -74,10 +74,7 @@ Deployed on Render.com: [https://single-vendor-e-commerce-website.onrender.com/]
 
 ## Screenshots
 
-![Home Page](screenshots/home.png)
-![Admin Dashboard](screenshots/admin_dashboard.png)
-![Cart Page](screenshots/cart.png)
-![Checkout Page](screenshots/checkout.png)
+Screenshots : [Screenshots](https://github.com/prathameshdol196/Single-Vendor-E-Commerce-Website/tree/master/screenshots)
 
 ## License
 
