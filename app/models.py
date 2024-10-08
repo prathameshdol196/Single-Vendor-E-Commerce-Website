@@ -39,6 +39,9 @@ class Order(db.Model):
     products = db.relationship("OrderProduct", backref="order", lazy=True)
     total = db.Column(db.Float, nullable=False)
     date_ordered = db.Column(db.DateTime, nullable=False, default=db.func.now())
+    status = db.Column(db.String(20), nullable=False, default='Pending')
+
+    STATUS_CHOICES = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled']
 
 
 class OrderProduct(db.Model):

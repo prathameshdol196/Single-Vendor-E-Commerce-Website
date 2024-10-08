@@ -113,7 +113,7 @@ def checkout():
     if request.method == "POST":
         # Process the order
         total = 0
-        order = Order(user_id=current_user.id, total=0)
+        order = Order(user_id=current_user.id, total=0, status="Pending")  # Explicitly set status
         db.session.add(order)
         db.session.commit()  # Commit to generate order ID
 

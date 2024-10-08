@@ -17,7 +17,7 @@
         <tr>
             <td>{{ item.product.name }}</td>
             <td>{{ item.quantity }}</td>
-            <td>${{ '%.2f'|format(item.subtotal) }}</td>
+            <td>₹{{ '%.2f'|format(item.subtotal) }}</td>
             <td>
                 <form action="{{ url_for('main.remove_from_cart', product_id=item.product.id) }}" method="POST">
                     <button type="submit" class="btn btn-danger btn-sm">Remove</button>
@@ -27,7 +27,7 @@
         {% endfor %}
     </tbody>
 </table>
-<h4>Total: ${{ '%.2f'|format(total) }}</h4>
+<h4>Total: ₹{{ '%.2f'|format(total) }}</h4>
 <form action="{{ url_for('main.checkout') }}" method="POST">
     <button type="submit" class="btn btn-success">Proceed to Checkout</button>
 </form>

@@ -23,7 +23,7 @@
     <tr>
         <td>{{ product.id }}</td>
         <td>{{ product.name }}</td>
-        <td>${{ '%.2f'|format(product.price) }}</td>
+        <td>₹{{ '%.2f'|format(product.price) }}</td>
         <td>{{ product.stock }}</td>
         <td>
             <a href="{{ url_for('admin.edit_product', product_id=product.id) }}" class="btn btn-warning btn-sm">Edit</a>
@@ -85,15 +85,16 @@
     </ul>
 </nav>
 
-<!-- Repeat similar pagination for Orders Section -->
+<!-- Orders Section -->
 <h3 class="mt-5">Manage Orders</h3>
 <table class="table table-striped">
     <thead>
     <tr>
         <th>Order ID</th>
         <th>User</th>
-        <th>Total ($)</th>
+        <th>Total (₹)</th>
         <th>Date Ordered</th>
+        <th>Status</th>
         <th>Products</th>
     </tr>
     </thead>
@@ -104,6 +105,7 @@
         <td>{{ order.user.username }} ({{ order.user.email }})</td>
         <td>{{ '%.2f'|format(order.total) }}</td>
         <td>{{ order.date_ordered.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+        <td>{{ order.status }}</td>
         <td>
             <ul>
                 {% for item in order.products %}
