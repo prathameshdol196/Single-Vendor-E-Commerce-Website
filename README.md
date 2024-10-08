@@ -54,6 +54,9 @@ Render was chosen as the hosting platform due to its robust support for deployin
     ```bash
     export SECRET_KEY='your_secret_key'
     export DATABASE_URL='your_postgresql_database_url'
+    export ADMIN_USERNAME='your_admin_username'
+    export ADMIN_EMAIL='your_admin_email'
+    export ADMIN_PASSWORD='your_admin_password'
     ```
 
 6. **Initialize the database:**
